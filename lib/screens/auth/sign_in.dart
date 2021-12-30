@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app/services/authserv.dart';
 
 class SignIn extends StatefulWidget {
@@ -42,6 +43,21 @@ class _SignInState extends State<SignIn> {
           child: Column(
             children: [
               SizedBox(height: 20.0,),
+              SizedBox(
+                height: 30.0,
+
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    _auth.signInwithGoogle();
+                  },
+                  icon: FaIcon(FontAwesomeIcons.google),
+                  label: Text(
+                    'Sign In With Google',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (val) => val!.isEmpty ? 'Enter an email' : null,

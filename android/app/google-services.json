@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "658344519031-jhf14f6bqp7fevc6a1f39opkkj34p7a2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.misa.my_app",
+            "certificate_hash": "4349fbea984b7ddd030c9c08b875b2c4c872c646"
+          }
+        },
+        {
           "client_id": "658344519031-u5dgurc4o5vj8t17po5napi0kdot2fth.apps.googleusercontent.com",
           "client_type": 3
         }
