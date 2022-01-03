@@ -58,6 +58,21 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 30.0,
+
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    _auth.signInWithFacebook();
+                  },
+                  icon: FaIcon(FontAwesomeIcons.facebook),
+                  label: Text(
+                    'Sign In With Facebook',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (val) => val!.isEmpty ? 'Enter an email' : null,
