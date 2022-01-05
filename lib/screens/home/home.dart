@@ -1,7 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/models/notification.dart';
 import 'package:my_app/services/authserv.dart';
 
+
 class Home extends StatelessWidget {
+  PushNotification _notification;
+  Home(PushNotification this._notification);
   final AuthService _auth = AuthService();
 
   @override
@@ -22,6 +28,14 @@ class Home extends StatelessWidget {
           )
         ],
       ),
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        children: [
+          Text(_notification.body ?? ''),
+        ],
+      ),
     );
   }
 }
+
+

@@ -45,8 +45,12 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20.0,),
               SizedBox(
                 height: 30.0,
+                width: 300.0,
 
                 child: OutlinedButton.icon(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+                  ),
                   onPressed: () {
                     _auth.signInwithGoogle();
                   },
@@ -60,8 +64,12 @@ class _SignInState extends State<SignIn> {
               ),
               SizedBox(
                 height: 30.0,
+                width: 300.0,
 
                 child: OutlinedButton.icon(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+                  ),
                   onPressed: () {
                     _auth.signInWithFacebook();
                   },
