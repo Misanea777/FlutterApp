@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/services/authserv.dart';
+import 'package:my_app/util/extensions.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -42,19 +43,19 @@ class _RegisterState extends State<Register> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: 20.0,),
+                const SizedBox(height: 20.0,),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Email'),
-                  validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  validator: (val) => val.isValidEmailWithErrCode(),
                   onChanged: (val) {
                     setState(() {
                       email = val;
                     });
                   },
                 ),
-                SizedBox(height: 20.0,),
+                const SizedBox(height: 20.0,),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
+                  decoration: const InputDecoration(labelText: 'Password'),
                   validator: (val) => val!.isEmpty ? 'Enter an password' : null,
                   obscureText: true,
                   onChanged: (val) {
@@ -63,14 +64,24 @@ class _RegisterState extends State<Register> {
                     });
                   },
                 ),
-                SizedBox(height: 20.0,),
+                const SizedBox(height: 20.0,),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Confirm the password'),
+                  validator: (val) => (val! == password )? 'Confirm the password' : null,
+                  obscureText: true,
+                  onChanged: (val) {
+
+                  },
+                ),
+                const SizedBox(height: 20.0,),
                 ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        dynamic res = await _auth.registerWithEmailAndPassword(email, password);
-                        if(res == null) {
+                        try{
+                          await _auth.registerWithEmailAndPassword(email, password);
+                        } catch(e) {
                           setState(() {
-                            err = 'invalid email or password';
+                            err = e.toString().cutAllBefore(']');
                           });
                         }
                       }

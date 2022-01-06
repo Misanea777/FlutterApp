@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app/services/authserv.dart';
+import 'package:my_app/util/extensions.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -105,10 +106,11 @@ class _SignInState extends State<SignIn> {
               ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      dynamic res = await _auth.signInWithEmailAndPassword(email, password);
-                      if(res == null) {
+                      try{
+                        await _auth.signInWithEmailAndPassword(email, password);
+                      } catch(e) {
                         setState(() {
-                          err = 'invalid email or password';
+                          err = e.toString().cutAllBefore(']');
                         });
                       }
                     }
