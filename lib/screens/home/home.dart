@@ -3,6 +3,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/data/user_dao.dart';
+import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/models/note.dart';
 import 'package:my_app/models/notification.dart';
 import 'package:my_app/services/auth_service.dart';
@@ -13,8 +14,9 @@ import 'note_create.dart';
 class Home extends StatelessWidget {
   PushNotification _notification;
   Home(PushNotification this._notification);
-  final AuthService _auth = AuthService();
-  final UserDao _dao = UserDao();
+  final AuthService _auth = sl.get<AuthService>();
+  final UserDao _dao = sl.get<UserDao>();
+
 
   @override
   Widget build(BuildContext context) {

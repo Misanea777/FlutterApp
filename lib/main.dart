@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/models/notification.dart';
 import 'package:my_app/models/user.dart';
 import 'package:my_app/screens/wrapper.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
+  init();
   runApp(const MyApp());
 }
 

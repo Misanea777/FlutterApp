@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app/data/user_dao.dart';
+import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/models/user.dart';
 import 'package:my_app/services/auth_service.dart';
 import 'package:my_app/services/user_service.dart';
@@ -17,7 +18,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final UserService _userService = UserService();
+  final UserService _userService = sl.get<UserService>();
+
 
   String email = '';
   String password = '';

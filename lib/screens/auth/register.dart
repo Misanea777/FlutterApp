@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:my_app/data/user_dao.dart';
+import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/services/auth_service.dart';
 import 'package:my_app/services/user_service.dart';
 import 'package:my_app/util/extensions.dart';
@@ -13,9 +15,10 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final UserService _userService = UserService();
-  final AuthService _auth = AuthService();
+  final UserService _userService = sl.get<UserService>();
+  final AuthService _auth = sl.get<AuthService>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 
   String email = '';
   String password = '';

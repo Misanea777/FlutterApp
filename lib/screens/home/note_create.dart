@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/data/user_dao.dart';
+import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/models/note.dart';
 import 'package:my_app/util/extensions.dart';
 
@@ -13,7 +14,7 @@ class CreateNote extends StatefulWidget {
 
 class _CreateNoteState extends State<CreateNote> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final UserDao _dao = UserDao();
+  final UserDao _dao = sl.get<UserDao>();
   String title = '';
   String text = '';
   String err = '';

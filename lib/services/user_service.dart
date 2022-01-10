@@ -3,13 +3,15 @@ import 'package:my_app/models/note.dart';
 import 'package:my_app/models/user.dart';
 
 class UserService {
-  final UserDao _dao = UserDao();
+  final UserDao dao;
+
+  UserService({required this.dao});
 
   void createNote(Note note) {
-    _dao.createNote(note);
+    dao.createNote(note);
   }
 
   void initUserIfNew(CustomUser user) => user.isNewUser ?
-  _dao.initUser() : null;
+  dao.initUser() : null;
 
 }
