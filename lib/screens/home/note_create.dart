@@ -1,24 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/data/user_dao.dart';
-import 'package:my_app/services/authserv.dart';
+import 'package:my_app/models/Note.dart';
 import 'package:my_app/util/extensions.dart';
 
-class Register extends StatefulWidget {
-  final Function toggleView;
-  Register({required this.toggleView});
+class CreateNote extends StatefulWidget {
+  const CreateNote({Key? key}) : super(key: key);
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _CreateNoteState createState() => _CreateNoteState();
 }
 
-class _RegisterState extends State<Register> {
-
-  final AuthService _auth = AuthService();
-  final UserDao _dao = UserDao();
+class _CreateNoteState extends State<CreateNote> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  String email = '';
-  String password = '';
+  final UserDao _dao = UserDao();
+  String title = '';
+  String text = '';
   String err = '';
 
   @override
@@ -28,16 +25,6 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Register'),
-        actions: [
-          TextButton.icon(
-              onPressed: () {
-                widget.toggleView();
-              },
-              icon: Icon(Icons.person),
-              label: Text('Sign In')
-          )
-        ],
       ),
       body: Container(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
@@ -47,42 +34,35 @@ class _RegisterState extends State<Register> {
               children: [
                 const SizedBox(height: 20.0,),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (val) => val.isValidEmailWithErrCode(),
+                  decoration: const InputDecoration(labelText: 'Title'),
+                  validator: (val) =>
+                  val!.isEmpty
+                      ? 'Title cannot be empty'
+                      : null,
                   onChanged: (val) {
                     setState(() {
-                      email = val;
+                      title = val;
                     });
                   },
                 ),
                 const SizedBox(height: 20.0,),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  validator: (val) => val!.isEmpty ? 'Enter an password' : null,
-                  obscureText: true,
+                  decoration: const InputDecoration(labelText: 'Text'),
+                  validator: (val) => null,
                   onChanged: (val) {
                     setState(() {
-                      password = val;
+                      text = val;
                     });
-                  },
-                ),
-                const SizedBox(height: 20.0,),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Confirm the password'),
-                  validator: (val) => val!.isEmpty ? 'Confirm the password' : null,
-                  obscureText: true,
-                  onChanged: (val) {
-
                   },
                 ),
                 const SizedBox(height: 20.0,),
                 ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        try{
-                          await _auth.registerWithEmailAndPassword(email, password);
-                          _dao.saveUser();
-                        } catch(e) {
+                        try {
+                          _dao.createNote(Note(title, text));
+                          Navigator.pop(context);
+                        } catch (e) {
                           setState(() {
                             err = e.toString().cutAllBefore(']');
                           });
@@ -90,7 +70,7 @@ class _RegisterState extends State<Register> {
                       }
                     },
                     child: Text(
-                      'Register',
+                      'Create',
                       style: TextStyle(color: Colors.white),
                     )
                 ),
