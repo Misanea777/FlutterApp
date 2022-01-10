@@ -1,8 +1,12 @@
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_app/data/user_dao.dart';
 import 'package:my_app/models/user.dart';
 import 'package:my_app/util/resource.dart';
+import 'package:twitter_login/entity/auth_result.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -48,7 +52,7 @@ class AuthService {
     return _userFromFirebaaseUser(user);
   }
 
-  Future<String?> signInwithGoogle() async {
+  Future<bool> signInwithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
       await _googleSignIn.signIn();
@@ -58,7 +62,8 @@ class AuthService {
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
-      await _auth.signInWithCredential(credential);
+      UserCredential authResult = await _auth.signInWithCredential(credential);
+      return authResult.additionalUserInfo!.isNewUser;
     } on FirebaseAuthException catch (e) {
       print(e.message);
       throw e;
@@ -72,23 +77,15 @@ class AuthService {
     return await _auth.signOut();
   }
 
-  Future<Resource?> signInWithFacebook() async {
+  Future<bool> signInWithFacebook() async {
     try {
       final LoginResult result = await FacebookAuth.instance.login();
-      switch (result.status) {
-        case LoginStatus.success:
+
           final AuthCredential facebookCredential =
           FacebookAuthProvider.credential(result.accessToken!.token);
           final userCredential =
           await _auth.signInWithCredential(facebookCredential);
-          return Resource(status: Status.Success);
-        case LoginStatus.cancelled:
-          return Resource(status: Status.Cancelled);
-        case LoginStatus.failed:
-          return Resource(status: Status.Error);
-        default:
-          return null;
-      }
+          return userCredential.additionalUserInfo!.isNewUser;
     } on FirebaseAuthException catch (e) {
       print(e);
       if (e.code == 'account-exists-with-different-credential') {

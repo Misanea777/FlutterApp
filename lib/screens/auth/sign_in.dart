@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app/data/user_dao.dart';
 import 'package:my_app/services/authserv.dart';
 import 'package:my_app/util/extensions.dart';
 
@@ -14,6 +15,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final UserDao _dao = UserDao();
 
   String email = '';
   String password = '';
@@ -53,7 +55,8 @@ class _SignInState extends State<SignIn> {
                     backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
                   ),
                   onPressed: () {
-                    _auth.signInwithGoogle();
+                    Future<bool> isNewUser = _auth.signInwithGoogle();
+                    isNewUser.then((value) => value ? _dao.saveUser() : null);
                   },
                   icon: FaIcon(FontAwesomeIcons.google),
                   label: Text(
@@ -72,7 +75,8 @@ class _SignInState extends State<SignIn> {
                     backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
                   ),
                   onPressed: () {
-                    _auth.signInWithFacebook();
+                    Future<bool> isNewUser = _auth.signInWithFacebook();
+                    isNewUser.then((value) => value ? _dao.saveUser() : null);
                   },
                   icon: FaIcon(FontAwesomeIcons.facebook),
                   label: Text(
