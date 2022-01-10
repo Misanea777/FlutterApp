@@ -12,24 +12,18 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  CustomUser? _userFromFirebaaseUser(User? user) {
-    return user != null ? CustomUser(uid: user.uid) : null;
+  CustomUser? _userFromFirebaaseUser(User? user, {bool isNewUser = false}) {
+    return user != null ? CustomUser(
+        uid: user.uid,
+        isNewUser: isNewUser,
+      )
+      : null;
   }
 
   Stream<CustomUser?> get user {
     return _auth.authStateChanges().map(_userFromFirebaaseUser);
   }
 
-  Future singInAnon() async {
-    try {
-      UserCredential result =  await _auth.signInAnonymously();
-      User? user = result.user;
-      return _userFromFirebaaseUser(user!);
-    } catch(e) {
-      print(e.toString());
-      return null;
-    }
-  }
 
   Future singOut() async {
     try {
@@ -40,19 +34,17 @@ class AuthService {
     }
   }
 
-  Future registerWithEmailAndPassword(String email, String password) async {
-    UserCredential result =  await _auth.createUserWithEmailAndPassword(email: email, password: password);
-    User? user = result.user;
-    return _userFromFirebaaseUser(user);
+  Future<CustomUser?> registerWithEmailAndPassword(String email, String password) async {
+    UserCredential userCredential =  await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    return _userFromFirebaaseUser(userCredential.user, isNewUser: true);
   }
 
-  Future signInWithEmailAndPassword(String email, String password) async {
-    UserCredential result =  await _auth.signInWithEmailAndPassword(email: email, password: password);
-    User? user = result.user;
-    return _userFromFirebaaseUser(user);
+  Future<CustomUser?> signInWithEmailAndPassword(String email, String password) async {
+    UserCredential userCredential =  await _auth.signInWithEmailAndPassword(email: email, password: password);
+    return _userFromFirebaaseUser(userCredential.user);
   }
 
-  Future<bool> signInwithGoogle() async {
+  Future<CustomUser?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
       await _googleSignIn.signIn();
@@ -62,8 +54,11 @@ class AuthService {
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
-      UserCredential authResult = await _auth.signInWithCredential(credential);
-      return authResult.additionalUserInfo!.isNewUser;
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      return _userFromFirebaaseUser(
+          userCredential.user,
+          isNewUser: userCredential.additionalUserInfo!.isNewUser
+      );
     } on FirebaseAuthException catch (e) {
       print(e.message);
       throw e;
@@ -77,7 +72,7 @@ class AuthService {
     return await _auth.signOut();
   }
 
-  Future<bool> signInWithFacebook() async {
+  Future<CustomUser?> signInWithFacebook() async {
     try {
       final LoginResult result = await FacebookAuth.instance.login();
 
@@ -85,7 +80,10 @@ class AuthService {
           FacebookAuthProvider.credential(result.accessToken!.token);
           final userCredential =
           await _auth.signInWithCredential(facebookCredential);
-          return userCredential.additionalUserInfo!.isNewUser;
+          return _userFromFirebaaseUser(
+              userCredential.user,
+            isNewUser: userCredential.additionalUserInfo!.isNewUser,
+          );
     } on FirebaseAuthException catch (e) {
       print(e);
       if (e.code == 'account-exists-with-different-credential') {
@@ -118,12 +116,11 @@ class AuthService {
       return userCredential.user!.displayName;
     } on FirebaseAuthException catch (e) {
       print(e.message);
-      throw e;
+      rethrow;
     }
   }
 
   User getCurrentUser() {
     return _auth.currentUser!;
   }
-
 }

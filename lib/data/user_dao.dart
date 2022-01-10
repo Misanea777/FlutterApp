@@ -1,21 +1,21 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:my_app/models/Note.dart';
-import 'package:my_app/services/authserv.dart';
+import 'package:my_app/models/note.dart';
+import 'package:my_app/services/auth_service.dart';
 
 class UserDao {
   final AuthService _auth = AuthService();
   final DatabaseReference _usersRef =
       FirebaseDatabase.instance.ref('users');
 
-  void saveUser() {
-    createNote(Note('First post', 'This is the first post!'));
+  void initUser() {
+    createNote(Note('First note', 'This is the first note!'));
   }
 
   void createNote(Note note) {
-    _usersRef.child("${_auth.getCurrentUser().uid}/posts/${DateTime.now().toUtc().millisecondsSinceEpoch}").ref
+    _usersRef.child("${_auth.getCurrentUser().uid}/notes/${DateTime.now().toUtc().millisecondsSinceEpoch}").ref
         .set(note.toJson());
   }
 
-  DatabaseReference getPostsRef() =>  _usersRef.child("${_auth.getCurrentUser().uid}/posts").ref;
+  DatabaseReference getNotesRef() =>  _usersRef.child("${_auth.getCurrentUser().uid}/notes").ref;
 
 }

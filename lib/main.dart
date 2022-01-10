@@ -4,7 +4,7 @@ import 'package:my_app/models/notification.dart';
 import 'package:my_app/models/user.dart';
 import 'package:my_app/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:my_app/services/authserv.dart';
+import 'package:my_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 

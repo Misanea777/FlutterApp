@@ -1,4 +1,5 @@
 class CustomUser {
   final String uid;
-  CustomUser({required this.uid});
+  final bool isNewUser;
+  CustomUser({required this.uid, required this.isNewUser,});
 }

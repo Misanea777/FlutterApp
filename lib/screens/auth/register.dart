@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/data/user_dao.dart';
-import 'package:my_app/services/authserv.dart';
+import 'package:my_app/services/auth_service.dart';
+import 'package:my_app/services/user_service.dart';
 import 'package:my_app/util/extensions.dart';
 
 class Register extends StatefulWidget {
@@ -12,9 +13,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
+  final UserService _userService = UserService();
   final AuthService _auth = AuthService();
-  final UserDao _dao = UserDao();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -80,8 +80,9 @@ class _RegisterState extends State<Register> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try{
-                          await _auth.registerWithEmailAndPassword(email, password);
-                          _dao.saveUser();
+                          await _auth.registerWithEmailAndPassword(email, password).then((user) =>
+                              _userService.initUserIfNew(user!));
+
                         } catch(e) {
                           setState(() {
                             err = e.toString().cutAllBefore(']');

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/data/user_dao.dart';
-import 'package:my_app/models/Note.dart';
+import 'package:my_app/models/note.dart';
 import 'package:my_app/util/extensions.dart';
 
 class CreateNote extends StatefulWidget {
