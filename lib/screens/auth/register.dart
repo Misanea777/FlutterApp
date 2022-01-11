@@ -1,6 +1,5 @@
+
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:my_app/data/user_dao.dart';
 import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/services/auth_service.dart';
 import 'package:my_app/services/user_service.dart';
@@ -18,6 +17,7 @@ class _RegisterState extends State<Register> {
   final UserService _userService = sl.get<UserService>();
   final AuthService _auth = sl.get<AuthService>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _passKey = GlobalKey<FormFieldState>();
 
 
   String email = '';
@@ -31,19 +31,19 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Register'),
+        title: const Text('Register'),
         actions: [
           TextButton.icon(
               onPressed: () {
                 widget.toggleView();
               },
-              icon: Icon(Icons.person),
-              label: Text('Sign In')
+              icon: const Icon(Icons.person),
+              label: const Text('Sign In')
           )
         ],
       ),
       body: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -60,8 +60,9 @@ class _RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 20.0,),
                 TextFormField(
+                  key: _passKey,
                   decoration: const InputDecoration(labelText: 'Password'),
-                  validator: (val) => val!.isEmpty ? 'Enter an password' : null,
+                  validator: (password) => password!.length < 6 ? 'Password should have at least 6 characters' : null,
                   obscureText: true,
                   onChanged: (val) {
                     setState(() {
@@ -72,7 +73,10 @@ class _RegisterState extends State<Register> {
                 const SizedBox(height: 20.0,),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Confirm the password'),
-                  validator: (val) => val!.isEmpty ? 'Confirm the password' : null,
+                  validator: (confirmation) {
+                    String password = _passKey.currentState?.value;
+                    return confirmation == password ? null : "Confirm Password should match password";
+                  },
                   obscureText: true,
                   onChanged: (val) {
 
@@ -93,15 +97,15 @@ class _RegisterState extends State<Register> {
                         }
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Register',
                       style: TextStyle(color: Colors.white),
                     )
                 ),
-                SizedBox(height: 12.0,),
+                const SizedBox(height: 12.0,),
                 Text(
                   err,
-                  style: TextStyle(color: Colors.red, fontSize: 14.0),
+                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
                 )
               ],
             ),

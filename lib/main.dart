@@ -1,13 +1,17 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:my_app/di/injection_container.dart';
-import 'package:my_app/models/notification.dart';
-import 'package:my_app/models/user.dart';
-import 'package:my_app/screens/wrapper.dart';
+
+
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:my_app/screens/wrapper.dart';
 import 'package:my_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
+import 'di/injection_container.dart';
+import 'models/notification.dart';
+import 'models/user.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   print('background message ${message.notification!.body}');
