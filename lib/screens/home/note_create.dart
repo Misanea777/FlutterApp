@@ -48,6 +48,10 @@ class _CreateNoteState extends State<CreateNote> {
                 ),
                 const SizedBox(height: 20.0,),
                 TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 5,
+                  maxLength: 500,
                   decoration: const InputDecoration(labelText: 'Text'),
                   validator: (val) => null,
                   onChanged: (val) {

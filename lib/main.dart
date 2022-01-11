@@ -88,6 +88,7 @@ class _MyAppState extends State<MyApp> {
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Wrapper(_notification),
       ),
     );

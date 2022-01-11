@@ -16,6 +16,7 @@ class AuthService {
     return user != null ? CustomUser(
         uid: user.uid,
         isNewUser: isNewUser,
+        displayName: user.displayName,
       )
       : null;
   }
