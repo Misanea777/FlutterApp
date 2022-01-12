@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:my_app/data/user_dao.dart';
 import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/models/note.dart';
+import 'package:my_app/services/user_service.dart';
 import 'package:my_app/util/extensions.dart';
 
 class CreateNote extends StatefulWidget {
-  const CreateNote({Key? key}) : super(key: key);
 
   @override
   _CreateNoteState createState() => _CreateNoteState();
 }
 
 class _CreateNoteState extends State<CreateNote> {
+  final UserService _userService = sl.get<UserService>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final UserDao _dao = sl.get<UserDao>();
   String title = '';
   String text = '';
   String err = '';
@@ -65,7 +65,10 @@ class _CreateNoteState extends State<CreateNote> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          _dao.createNote(Note(title, text));
+                          _userService.saveNote(
+                              Note(title, text),
+                              DateTime.now().toUtc().millisecondsSinceEpoch
+                          );
                           Navigator.pop(context);
                         } catch (e) {
                           setState(() {
@@ -74,15 +77,15 @@ class _CreateNoteState extends State<CreateNote> {
                         }
                       }
                     },
-                    child: Text(
-                      'Create',
+                    child: const Text(
+                      'Save',
                       style: TextStyle(color: Colors.white),
                     )
                 ),
-                SizedBox(height: 12.0,),
+                const SizedBox(height: 12.0,),
                 Text(
                   err,
-                  style: TextStyle(color: Colors.red, fontSize: 14.0),
+                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
                 )
               ],
             ),

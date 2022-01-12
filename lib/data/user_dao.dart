@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:my_app/models/note.dart';
 import 'package:my_app/services/auth_service.dart';
 
@@ -11,11 +10,11 @@ class UserDao {
   UserDao({required this.auth});
 
   void initUser() {
-    createNote(Note('First note', 'This is the first note!'));
+    saveNote(Note('First note', 'This is the first note!'), DateTime.now().toUtc().millisecondsSinceEpoch);
   }
 
-  void createNote(Note note) {
-    _usersRef.child("${auth.getCurrentUser().uid}/notes/${DateTime.now().toUtc().millisecondsSinceEpoch}").ref
+  void saveNote(Note note, int key) {
+    _usersRef.child("${auth.getCurrentUser().uid}/notes/${key.toString()}").ref
         .set(note.toJson());
   }
 

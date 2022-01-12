@@ -7,8 +7,8 @@ class UserService {
 
   UserService({required this.dao});
 
-  void createNote(Note note) {
-    dao.createNote(note);
+  void saveNote(Note note, int key) {
+    dao.saveNote(note, key);
   }
 
   void initUserIfNew(CustomUser user) => user.isNewUser ?

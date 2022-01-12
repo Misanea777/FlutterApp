@@ -30,8 +30,9 @@ dependencies:
   firebase_analytics: ^9.0.4
   firebase_messaging: ^11.2.4
   firebase_database: ^9.0.4
-  dartz: ^0.10.1
+#  dartz: ^0.10.1
   get_it: ^7.2.0
+  tuple: ^2.0.0
 
 dev_dependencies:
   flutter_test:
