@@ -13,6 +13,21 @@ extension EmailValidatorWithErr on String? {
   }
 }
 
+extension UsernameNalidator on String {
+  bool isValidUsername() {
+    return RegExp(
+        r'^[a-zA-Z0-9_.-]+$'
+    ).hasMatch(this);
+  }
+}
+
+extension UsernameNalidatorWithErr on String? {
+  String? isValidUsernameWithErrCode() {
+    return this!.isEmpty ? 'Username cannot be empty' :
+    (!this!.isValidUsername()) ? 'Allowed only letters, numbers and underscors' : null;
+  }
+}
+
 extension StringExtension on String {
   String cutAllBefore(String marker) {
     return substring(indexOf(marker)+1);

@@ -10,6 +10,7 @@ class UserDao {
   UserDao({required this.auth});
 
   void initUser() {
+    _usersRef.child(auth.getCurrentUser().uid).set({'name': auth.getCurrentUser().displayName!});
     saveNote(Note('First note', 'This is the first note!'), DateTime.now().toUtc().millisecondsSinceEpoch);
   }
 
@@ -20,4 +21,24 @@ class UserDao {
 
   DatabaseReference getNotesRef() =>  _usersRef.child("${auth.getCurrentUser().uid}/notes").ref;
 
+  Query getUserByName(String queryText) {
+    Query q = _usersRef.orderByChild('name')
+      .startAt(queryText)
+      .endAt("$queryText\uf8ff");
+    return q;
+  }
+
+  void shareNote(String receiver, int noteId) {
+    _usersRef.child(receiver).child('sharedWithMe')
+        .update({noteId.toString(): auth.getCurrentUser().uid});
+  }
+
+  DatabaseReference getSharedWithMeNotes() {
+    return _usersRef.child(auth.getCurrentUser().uid).child('sharedWithMe')
+        .ref;
+  }
+
+  Future<DataSnapshot> getNoteByUserAndId(String uid, int noteId) {
+    return _usersRef.child(uid).child('notes').child(noteId.toString()).ref.get();
+  }
 }

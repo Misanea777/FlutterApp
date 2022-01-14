@@ -4,15 +4,17 @@ import 'package:my_app/data/user_dao.dart';
 import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/models/note.dart';
 import 'package:my_app/models/notification.dart';
+import 'package:my_app/screens/home/note_share.dart';
+import 'package:my_app/screens/home/show_shared.dart';
 import 'package:my_app/screens/menus/drawer.dart';
 import 'package:tuple/tuple.dart';
 
-import 'create_save.dart';
+import 'note_create.dart';
 import 'note_update.dart';
 
 class Home extends StatefulWidget {
   PushNotification _notification;
-  Home(PushNotification this._notification);
+  Home(this._notification, {Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -26,7 +28,9 @@ class _HomeState extends State<Home> {
   bool _isScrollDownButtonVisible = true;
   bool _isSearchBarVisible = false;
 
+
   String _searchQuery = '';
+
 
   void _scrollDown() {
     _controller.jumpTo(_controller.position.maxScrollExtent);
@@ -63,7 +67,7 @@ class _HomeState extends State<Home> {
           const SizedBox(width: 20),
           FloatingActionButton(
             heroTag: 'createBtn',
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                   context,
@@ -81,12 +85,12 @@ class _HomeState extends State<Home> {
             color: Colors.black,
             opacity: 10.0
         ),
-        title: Text('Notes'),
+        title: const Text('Notes'),
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
         actions: [
           Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () => setState(() {
                   _isSearchBarVisible = !_isSearchBarVisible;
@@ -99,12 +103,23 @@ class _HomeState extends State<Home> {
           ),
           Padding(
               padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {},
-                child: const Icon(
-                    Icons.more_vert
-                ),
-              )
+              child: PopupMenuButton(
+                color: Colors.brown[300],
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 'sharedNotes',
+                      child: Text('Notes shared with me'),
+                    ),
+                  ];
+                },
+              onSelected: (String value){
+                value == 'sharedNotes'? Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ShowSharedNotes())
+                ) : null;
+              },
+            ),
           ),
         ],
       ),
@@ -134,12 +149,42 @@ class _HomeState extends State<Home> {
                       const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500)),
                   subtitle: _buildHighlightedText(note.text, matched.item2,
                       const TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal)),
+                  trailing: _buildPopUpMenu(int.parse(snapshot.key!)),
+
                 );
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPopUpMenu(int noteKey) {
+    return  PopupMenuButton(
+      color: Colors.brown[300],
+      itemBuilder: (context) {
+        return [
+          const PopupMenuItem(
+            value: 'share',
+            child: Text('Share'),
+          ),
+          const PopupMenuItem(
+            value: 'delete',
+            child: Text('Delete'),
+          )
+        ];
+      },
+      onSelected: (String value){
+        value == 'share'? _shareNote(noteKey) : null;
+      },
+    );
+  }
+
+  void _shareNote(int noteKey) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ShareNote(noteKey: noteKey,))
     );
   }
 

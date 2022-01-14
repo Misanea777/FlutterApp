@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _passKey = GlobalKey<FormFieldState>();
 
-
+  String username = '';
   String email = '';
   String password = '';
   String err = '';
@@ -48,6 +48,16 @@ class _RegisterState extends State<Register> {
             key: _formKey,
             child: Column(
               children: [
+                const SizedBox(height: 20.0,),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Username'),
+                  validator: (val) => val.isValidUsernameWithErrCode(),
+                  onChanged: (val) {
+                    setState(() {
+                      username = val;
+                    });
+                  },
+                ),
                 const SizedBox(height: 20.0,),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Email'),
@@ -87,7 +97,7 @@ class _RegisterState extends State<Register> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try{
-                          await _auth.registerWithEmailAndPassword(email, password).then((user) =>
+                          await _auth.registerWithEmailAndPassword(email, password, username).then((user) =>
                               _userService.initUserIfNew(user!));
 
                         } catch(e) {

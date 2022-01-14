@@ -35,8 +35,9 @@ class AuthService {
     }
   }
 
-  Future<CustomUser?> registerWithEmailAndPassword(String email, String password) async {
+  Future<CustomUser?> registerWithEmailAndPassword(String email, String password, String username) async {
     UserCredential userCredential =  await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    await userCredential.user?.updateDisplayName(username);
     return _userFromFirebaaseUser(userCredential.user, isNewUser: true);
   }
 
