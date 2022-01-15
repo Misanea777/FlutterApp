@@ -8,7 +8,7 @@ class Note {
         title = json['title'] as String,
         text = json['text'] as String;
 
-  Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
     'title': title,
     'text': text,
   };

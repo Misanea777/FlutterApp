@@ -16,10 +16,12 @@ class UserDao {
 
   void saveNote(Note note, int key) {
     _usersRef.child("${auth.getCurrentUser().uid}/notes/${key.toString()}").ref
-        .set(note.toJson());
+        .update(note.toJson());
   }
 
   DatabaseReference getNotesRef() =>  _usersRef.child("${auth.getCurrentUser().uid}/notes").ref;
+
+  DatabaseReference getSharedWithMeRef() =>  _usersRef.child("${auth.getCurrentUser().uid}/sharedWithMe").ref;
 
   Query getUserByName(String queryText) {
     Query q = _usersRef.orderByChild('name')
@@ -28,17 +30,22 @@ class UserDao {
     return q;
   }
 
-  void shareNote(String receiver, int noteId) {
-    _usersRef.child(receiver).child('sharedWithMe')
-        .update({noteId.toString(): auth.getCurrentUser().uid});
+  void shareNote(String receiverUid, int key, String receiverName) {
+    getNotesRef().child(key.toString()).update({receiverUid: receiverName});
+    _usersRef.child(receiverUid).child('sharedWithMe')
+        .child(auth.getCurrentUser().uid)
+        .update({'name': auth.getCurrentUser().displayName});
   }
 
-  DatabaseReference getSharedWithMeNotes() {
-    return _usersRef.child(auth.getCurrentUser().uid).child('sharedWithMe')
-        .ref;
-  }
 
-  Future<DataSnapshot> getNoteByUserAndId(String uid, int noteId) {
-    return _usersRef.child(uid).child('notes').child(noteId.toString()).ref.get();
+
+  Query getSharedNotes(String senderUid) {
+    // getNotesRef().orderByChild('V3MBkJelO1br4YUpwUwbx28lQWD2')
+    //     .equalTo('Mihail Filipescu')
+    //     .get()
+    //     .then((value) => print(value.value));
+    return _usersRef.child(senderUid).child('notes')
+        .orderByChild(auth.getCurrentUser().uid)
+        .equalTo(auth.getCurrentUser().displayName);
   }
 }

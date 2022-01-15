@@ -42,7 +42,7 @@ class _ShareNoteState extends State<ShareNote> {
                 final bool isCurrentUser = user.uid == _auth.getCurrentUser().uid;
                 return isCurrentUser? SizedBox() : ListTile(
                   onTap: () {
-                    _dao.shareNote(user.uid, widget.noteKey);
+                    _dao.shareNote(user.uid, widget.noteKey, user.displayName!);
                   },
                   title: Text(user.displayName!),
                 );

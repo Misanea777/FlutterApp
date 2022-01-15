@@ -1,3 +1,5 @@
+
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/data/user_dao.dart';
@@ -23,25 +25,36 @@ class _ShowSharedNotesState extends State<ShowSharedNotes> {
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
       ),
-      body: ListView.builder(
-        itemBuilder: (context, int) {
-          _dao.getSharedWithMeNotes().get().then((value) => print(value.value));
-          _dao.getSharedWithMeNotes().onChildChanged.forEach((element) {
-            print(element.snapshot.value);
-          });
+      body: FirebaseAnimatedList(
+        shrinkWrap: true,
+        physics: const ClampingScrollPhysics(),
+        query: _dao.getSharedWithMeRef(),
+        itemBuilder: (context, snapshot, animation, index) {
+          final json = snapshot.value as Map<dynamic, dynamic>;
+          final name = json['name'] as String;
           return ListTile(
-
+            title: Text(name),
+            subtitle: _buildSharedFromUserNotes(snapshot.key!),
           );
-        },
-      ),
+        }
+      )
     );
   }
 
-  // void _initializeData() {
-  //   _dao.getSharedWithMeNotes().get().then((noteList)  {
-  //     final json = noteList.value as Map<dynamic, dynamic>;
-  //     _dao.getNoteByUserAndId(uid, noteId)
-  //   });
-  //   _sharedNotes.add(value)
-  // }
+  Widget _buildSharedFromUserNotes(String senderUid) {
+    return FirebaseAnimatedList(
+        shrinkWrap: true,
+        physics: const ClampingScrollPhysics(),
+        query: _dao.getSharedNotes(senderUid),
+        itemBuilder:  (context, snapshot, animation, index) {
+          final json = snapshot.value as Map<dynamic, dynamic>;
+          final note = Note.fromJson(json);
+          return ListTile(
+            title: Text(note.title),
+            subtitle: Text(note.text),
+          );
+        }
+    );
+  }
+
 }
