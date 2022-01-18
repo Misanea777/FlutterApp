@@ -8,7 +8,8 @@ import 'package:my_app/util/extensions.dart';
 class UpdateNote extends StatefulWidget {
   final Note _note;
   final int _noteKey;
-  const UpdateNote(this._note, this._noteKey);
+  final String? senderUid;
+  const UpdateNote(this._note, this._noteKey, {this.senderUid});
 
   @override
   _UpdateNoteState createState() => _UpdateNoteState();
@@ -30,7 +31,7 @@ class _UpdateNoteState extends State<UpdateNote> {
         elevation: 0.0,
       ),
       body: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -62,7 +63,10 @@ class _UpdateNoteState extends State<UpdateNote> {
                       if (_formKey.currentState!.validate()) {
                         try {
                           _formKey.currentState?.save();
-                          _userService.saveNote(Note(_title, _text), widget._noteKey);
+                          Note _noteToSave = Note(_title, _text);
+                          print(widget.senderUid);
+                          widget.senderUid != null? _userService.saveForeignNote(_noteToSave, widget._noteKey, widget.senderUid!):
+                          _userService.saveNote(_noteToSave, widget._noteKey);
                           Navigator.pop(context);
                         } catch (e) {
                           setState(() {

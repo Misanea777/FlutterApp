@@ -40,9 +40,15 @@ class _ShareNoteState extends State<ShareNote> {
                 final json = snapshot.value as Map<dynamic, dynamic>;
                 final user = CustomUser.fromJsonAndKey(json, snapshot.key!);
                 final bool isCurrentUser = user.uid == _auth.getCurrentUser().uid;
-                return isCurrentUser? SizedBox() : ListTile(
+                return isCurrentUser? const SizedBox() : ListTile(
                   onTap: () {
                     _dao.shareNote(user.uid, widget.noteKey, user.displayName!);
+                    showDialog(
+                        context: context,
+                        builder: (_) => const AlertDialog(
+                          title: Text('Note shared!'),
+                        )
+                    );
                   },
                   title: Text(user.displayName!),
                 );

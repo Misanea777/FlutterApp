@@ -14,6 +14,8 @@ class UserService {
   void initUserIfNew(CustomUser user) => user.isNewUser ?
   dao.initUser() : null;
 
-
+  void saveForeignNote(Note note, int key, String senderUid) {
+    dao.saveForeignNote(note, key, senderUid);
+  }
 
 }

@@ -6,6 +6,8 @@ import 'package:my_app/data/user_dao.dart';
 import 'package:my_app/di/injection_container.dart';
 import 'package:my_app/models/note.dart';
 
+import 'note_update.dart';
+
 class ShowSharedNotes extends StatefulWidget {
   const ShowSharedNotes({Key? key}) : super(key: key);
 
@@ -50,6 +52,13 @@ class _ShowSharedNotesState extends State<ShowSharedNotes> {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final note = Note.fromJson(json);
           return ListTile(
+            onTap: () {
+              print(senderUid);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UpdateNote(note, int.parse(snapshot.key!), senderUid: senderUid,))
+              );
+            },
             title: Text(note.title),
             subtitle: Text(note.text),
           );

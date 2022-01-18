@@ -19,6 +19,11 @@ class UserDao {
         .update(note.toJson());
   }
 
+  void saveForeignNote(Note note, int key, String senderUid) {
+    _usersRef.child("$senderUid/notes/${key.toString()}").ref
+        .update(note.toJson());
+  }
+
   DatabaseReference getNotesRef() =>  _usersRef.child("${auth.getCurrentUser().uid}/notes").ref;
 
   DatabaseReference getSharedWithMeRef() =>  _usersRef.child("${auth.getCurrentUser().uid}/sharedWithMe").ref;
